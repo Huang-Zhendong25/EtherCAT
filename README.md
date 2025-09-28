@@ -14,10 +14,10 @@ Here are some ideas to get you started:
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
 -->
-## Problem:
+## Problem
 When using TwinCAT3 as an EtherCAT master, connecting a slave and entering the Run Mode (DC synchronization), ***synchronization errors*** are often reported. At the same time, TwinCAT displays that the slave has reverted from the OP state to the SAFEOP state, and immediately returns to the OP state。 This can cause the slave to temporarily freeze during opeartion and sometimes even stop randomly in the SAFEOP state. Additionally, when scanning the slave and entering the Config Mode (or reverted from Run mode and then reset the slave to entering Config Mode or Free-Run Mode), it also stops randomly in the SAFEOP state, and it's necessary to try to re-scan to enter the OP state.<br>
 ![image](https://github.com/Huang-Zhendong25/Huang-Zhendong25/blob/main/pictures/Sychronization%20error.png?raw=true)
-## Components of Slave:
+## Components of Slave
 1. Physical Layer and Data Link Layer: FRJ45056 network port (with built-in isolation transformer), KS8721BLI-TR PHY chip, ET1100 EtherCAT Slave Controller.
 2. Application Layer: STM32F103CBT6.
 3. Using SPI as PDI, and using 3 external interrupt pins (EXT_IRQ, SYNC0, SYNC1) of STM32 to receive the interrupt signals (falling edge active) from ET1100.
