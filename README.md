@@ -170,12 +170,16 @@ void EXTI0_IRQHandler()
 	ENABLE_GLOBAL_INT;
 }
 ```
+
 ## Result
 During the operation of slaves, synchronization errors rarely occur. At this time, if the slave station is disconnected and then re-powered on, it's only necessary to reload the slaves instead of scanning again, and it can smoothly enter the OP state. Moreover, in the Free-Run mode, process data can be transmitted freely.<br>
-However, it might be necessary to optimize the judgement logic and the soft interrupt handling function, because based on the captured waveforms, it can be observed that during actual operation, there are occasional occurrences of 2 interrupt handling function operations following EXT_IRQ. According to the frequency of this occurrence, it's estimated that 2 compensations were carried out consecutively. This is because `88020000000000000000000000ff` was present both before and after `00002ff`. **The source coded provided by this repository doesn't include a second judgement, it will be improved in the future**.<br>
+However, it might be necessary to optimize the judgement logic and the soft interrupt handling function, because based on the captured waveforms, it can be observed that during actual operation, there are occasional occurrences of 2 interrupt handling function operations following EXT_IRQ. According to the frequency of this occurrence, it's estimated that 2 compensations were carried out consecutively. This is because `88020000000000000000000000ff` was present both before and after `00002ff`. **The source coded provided by this repository doesn't include a second judgement, it will be improved in the future**.<br><br/>
 ## Question
 What exactly causes EXT_IRQ to sometimes fail to be responded to? Is this a feature of the STM32 microcontroller? Or is it the feature of the F103 series? if it is said that the interruption was not responded to, then why didn't the SYNC0 signal have an error? Or, to put it another way, the previous analysis was incorrect, and the real reason is not like this?<br><br/>
-![image](https://github.com/Huang-Zhendong25/Huang-Zhendong25/blob/main/pictures/Read_twice.png?raw=true)<br><br/><br/>
+![image](https://github.com/Huang-Zhendong25/Huang-Zhendong25/blob/main/pictures/Read_twice.png?raw=true)<br><br/>
+Additionally, this method can solve the synchronization error when the master's cycle time is 10ms. However, when the cycle time is shortened to 1ms, it stops working properly. By using the logic analyzer to decode the SPI signal when the cycle time is 1ms, it was discovered that sometimes the EXT_IRQ interrupt handling function does not always read the ET1100 registers as `00002ff 88020000000000000000000000ff 0002ff` , but instead reads another register. 
+Since no decoding tests were conducted for the SPI communication under other cycle time, it's uncertain whether this situation is specific to 1ms or not. If it is, then adding a judgement for this situation in the judgement logic might allow for a more perfect solution to this problem.<br><br/>
+
 ## Acknowledgements
 I would like to express my gratitude to my senior classmate YXY, I am very grateful for his assistance and guidance.<br>
 
